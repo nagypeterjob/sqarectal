@@ -5,14 +5,20 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-header, footer {
+footer {
   padding: 1rem;
+}
+
+header {
+  height: 70px;
 }
 
 header ul {
   list-style: none;
-  padding: none;
+  padding: 0;
   margin: 0;
+  height: inherit;
+  display: block;
 }
 
 header ul li {
@@ -20,35 +26,50 @@ header ul li {
   padding-right: 2rem;
   display: table-cell;
   vertical-align: middle;
-  height: 40px;
+  height: inherit;
 }
 
 .logo {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-.main-container {
+.logo h2 {
+  text-align: center;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.main-container,
+header {
   display: -ms-flex;
 	display: -webkit-flex;
 	display: flex;
 }
 
-.main-container .sidebar-container {
+.main-container .sidebar-container,
+.logo {
   order: 1;
   flex: 1;
-  background-color: purple;
   flex-basis: auto;
   padding: .5rem;
-  min-height: 666px;
   max-width: 250px;
+  min-width: 250px;
+}
+.main-container .sidebar-container {
+  min-height: 666px;
+  background-color: purple;
+}
+
+.main-container .canvas-container,
+.navigation {
+	order: 1;
+  flex: 5;
+  padding: .5rem;
 }
 
 .main-container .canvas-container {
-	order: 1;
-  flex: 5;
   background-color: #ce9b64;
-  padding: .5rem;
 }
 
 
