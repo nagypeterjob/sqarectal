@@ -1,0 +1,23 @@
+{
+  "name": "sqarectal",
+  "author": "",
+  "version": "1.0.0",
+  "description": "Create randomly generated recursive squares",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nagypeterjob/sqarectal.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nagypeterjob/sqarectal/issues"
+  },
+  "homepage": "https://github.com/nagypeterjob/sqarectal#readme",
+  "dependencies": {
+
+  }
+}
