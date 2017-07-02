@@ -15,10 +15,11 @@ header {
 
 header ul {
   list-style: none;
-  padding: 0;
+  padding: 1.4rem 0;
   margin: 0;
   height: inherit;
   display: block;
+	overflow: hidden;
 }
 
 header ul li {
@@ -27,6 +28,7 @@ header ul li {
   display: table-cell;
   vertical-align: middle;
   height: inherit;
+	font-weight: 500;
 }
 
 .logo {
@@ -56,10 +58,6 @@ header {
   max-width: 250px;
   min-width: 250px;
 }
-.main-container .sidebar-container {
-  min-height: 666px;
-  background-color: purple;
-}
 
 .main-container .canvas-container,
 .navigation {
@@ -68,10 +66,9 @@ header {
   padding: .5rem;
 }
 
-.main-container .canvas-container {
-  background-color: #ce9b64;
+.main-container .canvas-container canvas {
+	
 }
-
 
 /* Utils */
 
