@@ -1,36 +1,80 @@
 var application = (function(app, $) {
 
-	context = null;
-	depth = 5;
+	WIDTH = 800;
+	BIAS = 0.5
 
 	app.init = function(drawboard) {
 		this.context = drawboard;
 		this.depth = 5;
+		this.rects = [];
 		this.context.setStrokeWitdh(1);
-		this.draw(0, 0, 800, 0);
-  };
+		this.context.drawRect(0, 0, WIDTH, WIDTH);
+		this.rects.push(new Rect(400 + BIAS, 400 + BIAS, WIDTH));
+		this.fillRandomizedRects(0);
+		this.draw();
+		this.draw(0);
+	};
 
-	app.draw = function(x, y, w, depth) {
+	app.fillRandomizedRects = function(depth) {
+		var rects = [];
+
 		if (depth < this.depth) {
-			this.context.drawRect(x, y, w, w);
-			var q = this.random(1, 5);
-			switch (q) {
-				case 1:
-					break;
-				case 2:
-					x += w / 2;
-					break;
-				case 3:
-					y += w / 2;
-				case 4:
-					x += w / 2;
-					y += w / 2;
-				break;
-				default:
-			}
-			app.draw(x, y, w / 2, depth + 1);
+				this.rects.forEach(function(rect) {
+					var x, y, w;
+					w = rect.prop.w / 4;
+					var q = this.random(1, 5);
+							switch (q) {
+								case 1:
+									x = rect.prop.x - w;
+									y = rect.prop.y - w;
+								break;
+								case 2:
+									x = rect.prop.x + w;
+									y = rect.prop.y - w;
+								break;
+								case 3:
+									x = rect.prop.x - w;
+									y = rect.prop.y + w;
+								break;
+								case 4:
+									x = rect.prop.x + w;
+									y = rect.prop.y + w;
+								break;
+								default:
+							}
+
+							if(Math.floor(x) === x) {
+								rects.push(new Rect(x + BIAS, y + BIAS, w * 2));
+							} else {
+								rects.push(new Rect(x, y, w * 2));
+							}
+							this.rects = this.rects.concat(rects);
+				}
+				.bind(this)
+			);
+			app.fillRandomizedRects(depth + 1);
 		}
-		return;
+	};
+
+	app.draw = function() {
+				this.rects.forEach(function(rect) {
+						this.drawRect(rect);
+				}
+				.bind(this)
+			);
+	};
+
+	app.drawRect = function(rect) {
+		var x = rect.prop.x;
+		var y = rect.prop.y;
+		var w = rect.prop.w;
+		var width = (w / 2);
+		this.context.beginPath();
+		this.context.moveTo(x - width, y);
+		this.context.lineTo(x + width, y);
+		this.context.moveTo(x, y - width);
+		this.context.lineTo(x, y + width);
+		this.context.stroke();
 	};
 
 	app.chance = function(perc) {
@@ -99,6 +143,5 @@ var drawboard = (function(canvas) {
   return canvas;
 }(drawboard || {}));
 
-drawboard.init()
-
+drawboard.init();
 application.init(drawboard);
