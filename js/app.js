@@ -4,20 +4,25 @@ var application = (function(app, $) {
 	BIAS = 0.5
 	NUM_NODES = 4;
 
-	app.init = function(drawboard) {
+	app.init = function(drawboard, width, bias) {
 		this.context = drawboard;
+		WIDTH = width;
+		BIAS = bias;
 		this.depth = 5;
 		this.randomness = 6;
+		this.context.setStrokeColorHex('black');
 		this.context.setStrokeWitdh(1);
 		this.context.setStrokeColor(90, 90, 90, 1);
-		this.context.drawRect(0, 0, WIDTH, WIDTH);
-		app.quadTree = new Rect(WIDTH / 2, WIDTH / 2, WIDTH);
-		this.createQuadtree(app.quadTree, 0);
+		app.redraw();
 	};
 
 	app.redraw = function() {
 		this.context.clearRect(0, 0, WIDTH, WIDTH);
-		this.context.drawRect(0, 0, WIDTH, WIDTH);
+		if (WIDTH === 600)
+			this.context.drawRect(BIAS, BIAS, WIDTH, WIDTH);
+		else
+			this.context.drawRect(0, 0, WIDTH, WIDTH);
+
 		this.quadTree = new Rect(WIDTH / 2, WIDTH / 2, WIDTH);
 		this.createQuadtree(app.quadTree, 0);
 	};
@@ -48,13 +53,25 @@ var application = (function(app, $) {
 								y = rect.prop.y + w / 2;
 							break;
 						}
-						if (depth === 4) {
-							x += BIAS;
-							y += BIAS;
-						} else if (depth === 5) {
-							x -= BIAS;
-							y -= BIAS;
+
+						if (WIDTH === 600) {
+							if (depth === 1) {
+								x += BIAS;
+								y += BIAS;
+							} else if (depth > 3) {
+								x -= BIAS;
+								y -= BIAS;
+							}
+						} else {
+							if (depth === 4) {
+								x += BIAS;
+								y += BIAS;
+							} else if (depth === 5) {
+								x -= BIAS;
+								y -= BIAS;
+							}
 						}
+
 						var child = new Rect(x, y, w);
 
 						rect.prop.children.push(child);
@@ -205,7 +222,15 @@ var Rect = (function(ox, oy, w) {
 
 
 drawboard.init();
-application.init(drawboard);
+
+if ($(window).height() < 800) {
+	$('canvas')
+		.width(600)
+		.height(600);
+	application.init(drawboard, 600, 0.25);
+} else {
+	application.init(drawboard, 800, 0.5);
+}
 
 $('.js-redraw-btn').on('click', function() {
 	application.redraw();
@@ -244,6 +269,7 @@ $('#about').on('mouseleave', function() {
 
 $('#contact').on('mouseover', function() {
 	$('.contact-modal').toggleClass('hidden');
+	$('.about-modal').addClass('hidden');
 });
 
 $('.contact-modal h1').on('click', function() {
