@@ -4,10 +4,9 @@ var application = (function(app, $) {
 	BIAS = 0.5
 	NUM_NODES = 4;
 
-	app.init = function(drawboard, width, bias) {
+	app.init = function(drawboard, width) {
 		this.context = drawboard;
 		WIDTH = width;
-		BIAS = bias;
 		this.depth = 5;
 		this.randomness = 6;
 		this.context.setStrokeColorHex('black');
@@ -18,11 +17,7 @@ var application = (function(app, $) {
 
 	app.redraw = function() {
 		this.context.clearRect(0, 0, WIDTH, WIDTH);
-		if (WIDTH === 600)
-			this.context.drawRect(BIAS, BIAS, WIDTH, WIDTH);
-		else
-			this.context.drawRect(0, 0, WIDTH, WIDTH);
-
+		this.context.drawRect(0, 0, WIDTH, WIDTH);
 		this.quadTree = new Rect(WIDTH / 2, WIDTH / 2, WIDTH);
 		this.createQuadtree(app.quadTree, 0);
 	};
@@ -55,12 +50,16 @@ var application = (function(app, $) {
 						}
 
 						if (WIDTH === 600) {
-							if (depth === 1) {
-								x += BIAS;
-								y += BIAS;
-							} else if (depth > 3) {
+							if (depth === 2) {
 								x -= BIAS;
 								y -= BIAS;
+							}
+							if (depth === 3) {
+
+							}
+							if (depth === 4) {
+								x += BIAS;
+								y += BIAS;
 							}
 						} else {
 							if (depth === 4) {
@@ -73,7 +72,6 @@ var application = (function(app, $) {
 						}
 
 						var child = new Rect(x, y, w);
-
 						rect.prop.children.push(child);
 						var rand = this.random(1,i+this.random(0,this.randomness-i));
 						if(rand > 1)
@@ -222,14 +220,11 @@ var Rect = (function(ox, oy, w) {
 
 
 drawboard.init();
-
 if ($(window).height() < 800) {
-	$('canvas')
-		.width(600)
-		.height(600);
-	application.init(drawboard, 600, 0.25);
+	$('canvas').attr('height', 600).attr('width', 600);
+	application.init(drawboard, 600);
 } else {
-	application.init(drawboard, 800, 0.5);
+	application.init(drawboard, 800);
 }
 
 $('.js-redraw-btn').on('click', function() {
