@@ -14,3 +14,7 @@ The application draws Quad Tree on HTML Canvas. One is able to:
 - Adjust tree depth
 - Donwload generated image
 - Choose draw color
+
+## LIVE DEMO 
+
+https://nagypeterjob.github.io/sqarectal/
