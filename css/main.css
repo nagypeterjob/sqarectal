@@ -31,6 +31,14 @@ header ul li {
 	font-weight: 500;
 }
 
+header ul li a{
+  color: #2196F3;
+}
+
+header ul li:hover {
+  cursor: pointer;
+}
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -67,10 +75,112 @@ header {
 }
 
 .main-container .canvas-container canvas {
-	
+
+}
+
+.sidebar-container ul {
+  list-style: none;
+}
+
+.sidebar-container ul li{
+  padding: 1rem;
+}
+
+.sidebar-container ul li label {
+  display: block;
+  font-weight: 500;
+  padding-bottom: .2rem;
+}
+
+.sidebar-container .btn {
+  background-color: #673AB7;
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem;
+  border: 1px solid #eee;
+  text-align: center;
+  width: 125px;
+}
+
+.sidebar-container .btn:hover {
+  background-color: #7E57C2;
+  cursor: pointer;
+}
+
+.sidebar-container .color-palette {
+  overflow: hidden;
+}
+
+.sidebar-container .color-palette .tile {
+  box-sizing: border-box;
+  width: 31px;
+  height: 31px;
+  padding: 1.5rem;
+  float: left;
+  display: block;
+  border: 1px solid transparent;
+}
+
+.sidebar-container .color-palette .tile:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.red {
+  background: #F44336;
+}
+
+.pink {
+  background: #E91E63;
+}
+
+.purple {
+  background: #9C27B0;
+}
+
+.blue {
+  background: #3F51B5;
+}
+
+.green {
+  background: #4CAF50;
+}
+
+.black {
+  background: black;
+}
+
+.about-modal,
+.contact-modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  font-size: 3rem;
+}
+
+.contact-modal {
+  left: 60%;
+}
+
+.about-modal h1,
+.contact-modal h1 {
+  margin: 0;
+}
+
+.about-modal a,
+.contact-modal a
+{
+  color: #2196F3;
+  text-decoration: none;
 }
 
 /* Utils */
+
+.hidden {
+  display: none;
+}
 
 .clearfix {
   clear:both;

@@ -23,11 +23,14 @@
     </div>
     <div class="navigation">
       <ul>
-        <li>
+        <li id="about">
             About
         </li>
-				<li>
+				<li id="contact">
             Contact
+        </li>
+        <li>
+            <a id="download" target="_blank">Download Image</a>
         </li>
       </ul>
       <div class="clearfix"></div>
@@ -35,7 +38,31 @@
   </header>
   <div class="main-container">
     <nav class="sidebar-container">
-
+      <ul class="controls">
+        <li>
+          <label for="randomness">Randomness</label>
+          <input id="randomness" value="5" class="js-randomness-range" type="range" min="5" max="10" step="1" />
+          <span class="value">1</span>
+        </li>
+        <li>
+          <label for="depth">Depth</label>
+          <input id="depth" value="6" class="js-depth-range" type="range" min="1" max="8" step="1" />
+          <span class="value">6</span>
+        </li>
+        <li>
+          <div class="color-palette">
+            <div class="tile red" data-color="#F44336"></div>
+            <div class="tile pink" data-color="#E91E63"></div>
+            <div class="tile purple" data-color="#9C27B0"></div>
+            <div class="tile blue" data-color="#3F51B5"></div>
+            <div class="tile green" data-color="#4CAF50"></div>
+            <div class="tile black" data-color="black"></div>
+          </div>
+        </li>
+        <li>
+          <div class="btn js-redraw-btn">Redraw</div>
+        </li>
+      </ul>
     </nav>
     <article class="canvas-container">
 		<canvas id="drawboard" width="800" height="800">
@@ -43,12 +70,25 @@
 		</canvas>
     </article>
   </div>
+  <div class="about-modal hidden">
+    <h1>
+      Sqarectal is a project to satisfy my artistic self that is
+      repressed by my daily corporate work. This project was highly
+      inspired by Pentagram's
+      <a href="https://www.instagram.com/p/BV7BReCh8Zv/?taken-by=pentagramdesign" target="_blank">
+        instagram post
+      </a>.
+    </h1>
+  </div>
+  <div class="contact-modal hidden">
+    <h1><a href="mailto:nagypeterjob@gmail.com" target="_blank">email</a></h1>
+    <h1><a href="https://github.com/nagypeterjob" target="_blank">github</a></h1>
+    <h1><a href="https://www.linkedin.com/in/peternagyjob/" target="_blank">linkedin</a></h1>
+  </div>
   <footer>
-
   </footer>
   <script src="js/lodash.js"></script>
   <script src="js/jquery.min.js"></script>
-  <script src="js/rects.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

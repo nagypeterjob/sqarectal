@@ -2,66 +2,68 @@ var application = (function(app, $) {
 
 	WIDTH = 800;
 	BIAS = 0.5
+	NUM_NODES = 4;
 
 	app.init = function(drawboard) {
 		this.context = drawboard;
 		this.depth = 5;
-		this.rects = [];
+		this.randomness = 6;
 		this.context.setStrokeWitdh(1);
+		this.context.setStrokeColor(90, 90, 90, 1);
 		this.context.drawRect(0, 0, WIDTH, WIDTH);
-		this.rects.push(new Rect(400 + BIAS, 400 + BIAS, WIDTH));
-		this.fillRandomizedRects(0);
-		this.draw();
-		this.draw(0);
+		app.quadTree = new Rect(WIDTH / 2, WIDTH / 2, WIDTH);
+		this.createQuadtree(app.quadTree, 0);
 	};
 
-	app.fillRandomizedRects = function(depth) {
-		var rects = [];
-
-		if (depth < this.depth) {
-				this.rects.forEach(function(rect) {
-					var x, y, w;
-					w = rect.prop.w / 4;
-					var q = this.random(1, 5);
-							switch (q) {
-								case 1:
-									x = rect.prop.x - w;
-									y = rect.prop.y - w;
-								break;
-								case 2:
-									x = rect.prop.x + w;
-									y = rect.prop.y - w;
-								break;
-								case 3:
-									x = rect.prop.x - w;
-									y = rect.prop.y + w;
-								break;
-								case 4:
-									x = rect.prop.x + w;
-									y = rect.prop.y + w;
-								break;
-								default:
-							}
-
-							if(Math.floor(x) === x) {
-								rects.push(new Rect(x + BIAS, y + BIAS, w * 2));
-							} else {
-								rects.push(new Rect(x, y, w * 2));
-							}
-							this.rects = this.rects.concat(rects);
-				}
-				.bind(this)
-			);
-			app.fillRandomizedRects(depth + 1);
-		}
+	app.redraw = function() {
+		this.context.clearRect(0, 0, WIDTH, WIDTH);
+		this.context.drawRect(0, 0, WIDTH, WIDTH);
+		this.quadTree = new Rect(WIDTH / 2, WIDTH / 2, WIDTH);
+		this.createQuadtree(app.quadTree, 0);
 	};
 
-	app.draw = function() {
-				this.rects.forEach(function(rect) {
-						this.drawRect(rect);
+	app.createQuadtree = function(rect, depth) {
+			rect.draw(this.context);
+			if (depth < this.depth) {
+				if (!rect.prop.children.length) {
+					var x = 0;
+					var y = 0;
+					for (var i = 0; i < NUM_NODES; i++) {
+						var w = rect.prop.w / 2;
+						switch (i) {
+							case 0:
+								x = rect.prop.x - w / 2 ;
+								y = rect.prop.y - w / 2;
+							break;
+							case 1:
+								x = rect.prop.x + w / 2;
+								y = rect.prop.y - w / 2;
+							break;
+							case 2:
+								x = rect.prop.x - w / 2;
+								y = rect.prop.y + w / 2;
+							break;
+							case 3:
+								x = rect.prop.x + w / 2;
+								y = rect.prop.y + w / 2;
+							break;
+						}
+						if (depth === 4) {
+							x += BIAS;
+							y += BIAS;
+						} else if (depth === 5) {
+							x -= BIAS;
+							y -= BIAS;
+						}
+						var child = new Rect(x, y, w);
+
+						rect.prop.children.push(child);
+						var rand = this.random(1,i+this.random(0,this.randomness-i));
+						if(rand > 1)
+						 app.createQuadtree(child, depth + 1);
+					}
 				}
-				.bind(this)
-			);
+			}
 	};
 
 	app.drawRect = function(rect) {
@@ -77,15 +79,32 @@ var application = (function(app, $) {
 		this.context.stroke();
 	};
 
+	app.setDept = function(depth) {
+		this.depth = depth;
+	};
+
+	app.setRandomness = function(randomness) {
+		this.randomness = randomness;
+	}
+
 	app.chance = function(perc) {
 		return Math.random() > perc;
+	};
+
+	app.setStrokeColorHex = function (hex) {
+		this.context.setStrokeColorHex(hex);
 	};
 
 	app.random = function getRandomInt(min, max) {
 	  min = Math.ceil(min);
 	  max = Math.floor(max);
 	  return Math.floor(Math.random() * (max - min)) + min;
-	}
+	};
+
+	app.downloadImage = function(link) {
+		link.href = this.context.toDataUrl();
+		link.download = 'Sqarectal.png';
+	};
 
   return app;
 }(application || {}, jQuery));
@@ -93,12 +112,14 @@ var application = (function(app, $) {
 var drawboard = (function(canvas) {
 
 	canvas.context = null;
+	canvas.canvasBoard = null;
 
 	canvas.init = function() {
 		var canvas = document.getElementById('drawboard');
 		var ctx = canvas.getContext('2d');
 		this.context = ctx;
-  };
+		this.canvasBoard = canvas;
+	};
 
 	canvas.drawRect = function(x, y, w, h) {
     canvas.context.strokeRect(x, y, w, h);
@@ -110,6 +131,10 @@ var drawboard = (function(canvas) {
 
 	canvas.setStrokeColor = function(r, g, b, a) {
 		canvas.context.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+	};
+
+	canvas.setStrokeColorHex = function(hex) {
+		canvas.context.strokeStyle = hex;
 	};
 
 	canvas.setFont = function(options) {
@@ -138,10 +163,89 @@ var drawboard = (function(canvas) {
 
 	canvas.stroke = function() {
 		canvas.context.stroke();
-	}
+	};
+
+	canvas.clearRect = function (x, y, w, h) {
+		canvas.context.clearRect(x, y, w, h);
+	};
+
+	canvas.toDataUrl = function() {
+		return canvas.canvasBoard.toDataURL();
+	};
 
   return canvas;
 }(drawboard || {}));
 
+var Rect = (function(ox, oy, w) {
+
+
+  var params = {
+    x: ox,
+    y: oy,
+    w: w,
+		children: []
+	};
+
+  return {
+    prop: params,
+		draw: function(context) {
+			var x = params.x + BIAS;
+			var y = params.y + BIAS;
+			var w = params.w;
+			var width = Math.floor(w / 2);
+			context.beginPath();
+			context.moveTo(x - width, y);
+			context.lineTo(x + width, y);
+			context.moveTo(x, y - width);
+			context.lineTo(x, y + width);
+			context.stroke();
+		}
+  };
+});
+
+
 drawboard.init();
 application.init(drawboard);
+
+$('.js-redraw-btn').on('click', function() {
+	application.redraw();
+});
+
+$('.js-randomness-range').on('change', function(e) {
+	 var val = $(e.target).val();
+	 $(this).parent().find('.value').html(val-4);
+	 application.setRandomness(val);
+});
+
+$('.js-depth-range').on('change', function(e) {
+	 var val = $(e.target).val();
+	 $(this).parent().find('.value').html(val);
+	 application.setDept(val);
+});
+
+$('.tile').on('click', function(e) {
+		var elem = $(e.target);
+		var color = elem.data('color');
+		application.setStrokeColorHex(color);
+});
+
+document.getElementById('download').addEventListener('click', function() {
+	application.downloadImage(this);
+}, this);
+
+$('#about').on('mouseover', function() {
+	$('.about-modal').toggleClass('hidden');
+	$('.contact-modal').addClass('hidden');
+});
+
+$('#about').on('mouseleave', function() {
+	$('.about-modal').toggleClass('hidden');
+});
+
+$('#contact').on('mouseover', function() {
+	$('.contact-modal').toggleClass('hidden');
+});
+
+$('.contact-modal h1').on('click', function() {
+	$('.contact-modal').toggleClass('hidden');
+});
